@@ -21,12 +21,24 @@ typedef struct moveToFrontCDT {
 	TNode * first; 
 	TNode * next; 
 	size_t size;
-	TNode * last; // este no entiendo para que se necesita 
+	TNode * last; 
 }
 
 moveToFrontADT newMoveToFront() { 
 	return calloc(1, sizeof(moveToFrontCDT)); 
 } 
+
+void freeRec(TNode * first) { 
+	if (first == NULL) 
+		return; 
+	freeRec(first->tail); 
+	free(first); 
+} 
+
+void free(moveToFrontADT m) {
+	freeRec(m->first); 
+	free(m);
+}
 
 unsigned int size(moveToFrontADT m) { 
 	return m->size; 
