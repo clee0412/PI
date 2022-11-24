@@ -1,0 +1,156 @@
+// distintos ejercicios que practiqué para el primer parcial 
+
+#define DIM 6
+
+int cuadrado (int m[][DIM]) {
+    int check[DIM*DIM+1] = {0};
+    for (int i = 0; i < DIM; i++) {
+        for (int j = 0; j < DIM; j++) {
+            if (m[i][j] > (i*DIM) && m[i][j] <= (i+1)*DIM) {
+                if (check[m[i][j]] == 0)
+                    check[m[i][j]]++;
+                else
+                    return 0; // no cumple si se repiten números
+            } else
+                return 0;
+        }
+    }
+    return 1;
+}
+
+#define CANT_POS 8
+int buscoPalabra(int m[][DIM], char * s, int fila, int columna, int nextFil, int nextCol) {
+    for (int i = 1; s[i]; i++) {
+        if (fila+nextFil < 0 || fila+nextFil >= DIM || columna + nextCol < 0 || columna+nextCol>=DIM)
+            return 0;
+        if (s[i] != m[fila+=nextFil][columna+=nextCol])
+            return 0;
+    }
+    return 1;
+}
+
+int palEnMat(int m[][DIM], int fila, int columna, char * s) {
+    int dir[][2] = {{0,1},{1,0},{0,-1},{-1,0},{1,1},{1,-1},{-1,1},{-1,-1}};
+
+    if (fila < 0 || fila >= DIM || columna < 0 || columna >= DIM)
+        return 0;
+    if (s[0] == 0)
+        return 1;
+
+
+    if (m[fila][columna] == s[0]) {
+        for (int i = 0; i < CANT_POS; i++) {
+            if (buscoPalabra(m, s, fila, columna, dir[i][0], dir[i][1]))
+                return 1;
+        }
+        return 0;
+    }
+    return 0;
+}
+
+long int factoreo(int vec[]) {
+    if (vec[0] == -1)
+        return 0;
+    int k = 1;
+    long int num = vec[0];
+    for (int i = 1; vec[i] != -1; i++) {
+        num *= vec[i];
+        if (vec[i] != vec[i-1])
+            vec[k++] = vec[i];
+    }
+    vec[k] = -1;
+    return num;
+
+}
+
+#define COLS 5
+
+void difSimPorFila(int f1[], int f2[], int f3[]) {
+    int i = 0, j = 0, k = 0;
+    while (f1[i] != -1 && f2[j] != -1) { // si alguno de los dos llega a -1 corta
+        if (f1[i] < f2[j])
+            f3[k++] = f1[i++];
+        else if (f1[i] > f2[j])
+            f3[k++] = f2[j++];
+        // y si son iguales no hago nada
+        else {
+            i++; j++;
+        }
+    }
+
+        while (f1[i] != -1)
+            f3[k++] = f1[i++];
+
+
+        while (f2[j] != -1)
+            f3[k++] = f2[j++];
+
+
+    f3[k] = -1;
+}
+
+void difSim(int m1[][COLS], int m2[][COLS], int m3[][COLS], int filas) {
+    for (int i = 0; i < filas; i++) {
+        difSimPorFila(m1[i], m2[i], m3[i]);
+    }
+}
+
+
+int main(void) {
+    /*int m[][DIM] = {{3,1,4,2},
+                    {8,7,6,5},
+                    {9,10,11,12},
+                    {15,16,13,11}};
+    printf("%d\n", cuadrado(m));*/
+
+    /*int m[][DIM] = {{'L','O','B','R','A'},
+                    {'F','H','R','G','O','R'},
+                    {'C','O','S','A','D','A'},
+                    {'R','L','A','H','N','N'},
+                    {'W','A','O','Y','U','T'},
+                    {'Q','S','G','S','M','A'}};
+    int ans1 = palEnMat(m,5,1,"SAL");
+    int ans2 = palEnMat(m,2,0,"COSA");
+    int ans3 = palEnMat(m,2,0,"CHB");
+    int ans4 = palEnMat(m,2,0,"CLOS");
+    int ans5 = palEnMat(m,5,1,"");
+    int ans6 = palEnMat(m,2,0,"C");
+
+    int ans7 = palEnMat(m,5,1,"sal");
+    int ans8 = palEnMat(m,5,0,"SALA");
+    int ans9 = palEnMat(m,2,0,"COSADAS");
+    int ans10 = palEnMat(m,6,0,"");
+
+    printf("%d, %d, %d, %d, %d, %d, %d, %d, %d, %d\n", ans1, ans2, ans3, ans4, ans5, ans6, ans7, ans8, ans9, ans10);
+     */
+
+    /*int factores[] = {2,2,2,3,3,4,5,5,6,6,6,6,7,-1};
+    long resultado = factoreo(factores);
+    assert(resultado==65318400);
+    assert(factores[0] == 2);
+    assert(factores[1] == 3);
+    assert(factores[2] == 4);
+    assert(factores[3] == 5);
+    assert(factores[4] == 6);
+    assert(factores[5] == 7);
+    assert(factores[6] == -1);
+    puts("OK!");*/
+
+    int m1[][COLS] = {{1,2,3,4,-1},
+                      {3,4,5,-1},
+                      {10,15,20,-1},
+                      {-1},{-1},{5,6,7,-1}};
+    int m2[][COLS] = {{3,4,5,6,-1},
+                      {3,4,5,-1},
+                      {10,20,-1},
+                      {1,2,3,4,-1},
+                      {-1},
+                      {1,2,7,-1}};
+    int m3[6][COLS];
+    difSim(m1, m2, m3, 6);
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < COLS; j++)
+            printf("%d, ", m3[i][j]);
+        putchar('\n');
+    }
+}
